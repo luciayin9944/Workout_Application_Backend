@@ -12,6 +12,10 @@ migrate = Migrate(app, db)
 db.init_app(app)
 
 # Define Routes here
+@app.route('/')
+def get_home():
+    return "Welcome to WorkOut!"
+
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
