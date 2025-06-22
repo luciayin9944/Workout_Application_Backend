@@ -47,7 +47,6 @@ def add_workout():
     new_workout = Workout(**validated_data)
     db.session.add(new_workout)
     db.session.commit()
-
     return jsonify(workout_schema.dump(new_workout)), 201
 
 
@@ -91,7 +90,6 @@ def add_exercise():
     new_exercise = Exercise(**validated_data)
     db.session.add(new_exercise)
     db.session.commit()
-
     return jsonify(exercise_schema.dump(new_exercise)), 201
 
 
@@ -106,11 +104,37 @@ def delete_exercise(id):
     return jsonify({"message": f"Exercise {id} deleted successfully."}), 200
 
 
+  # search WorkoutExercises
+@app.route('/workouts/<int:workout_id>/exercises/<int:exercise_id>/workout_exercises', methods=['GET'])
+def get_workout_exercise(workout_id, exercise_id):
+    we = WorkoutExercises.query.filter_by(workout_id=workout_id, exercise_id=exercise_id).first()
+    if not we:
+        return jsonify({"error": "WorkoutExercises not found"}), 404
+    
+    return WorkoutExercisesSchema().dump(we), 200
 
 
-# @app.route('/workouts/<int:workout_id>/exercises/<int:exercise_id>/workout_exercises', methods=['POST'])
-# def add_workout_to_exercise():
-#     pass
+
+@app.route('/workouts/<int:workout_id>/exercises/<int:exercise_id>/workout_exercises', methods=['POST'])
+def add_exercise_to_workout(workout_id, exercise_id):
+    data = request.get_json()
+    workout = Workout.query.filter_by(id=workout_id).first()
+    exercise = Exercise.query.filter_by(id=exercise_id).first()
+
+    if not workout or not exercise:
+        return jsonify({"error": "Invalid workout or exercise ID"}), 404
+    
+    try:
+        we_schema = WorkoutExercisesSchema()
+        validated_data = we_schema.load(data)
+    except ValidationError as e:
+        return jsonify({"error": e.messages}), 400
+    
+    we = WorkoutExercises(**validated_data, workout_id=workout_id, exercise_id=exercise_id)
+    db.session.add(we)
+    db.session.commit()
+    return we_schema.dump(we), 201
+
 
 
 

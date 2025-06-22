@@ -62,6 +62,8 @@ Test your endpoints using Postman or curl:
 
 - `GET http://localhost:5555/workouts`
 
+- `GET http://localhost:5555/workouts/2`
+
 - `POST http://localhost:5555/workouts`
   - Body: 
   {
@@ -74,12 +76,22 @@ Test your endpoints using Postman or curl:
 
 - `GET http://localhost:5555/exercises`
 
+- `GET http://localhost:5555/exercises/1`
+
 - `POST http://localhost:5555/exercises`
   - Body: 
     {
-        "name": "Burpee",
-        "category": "Cardio",
-        "equipment_needed": false
+      "name": "Burpee",
+      "category": "Cardio",
+      "equipment_needed": false
     }
 
 - `DELETE http://localhost:5555/exercises/4`
+
+- `POST http://127.0.0.1:5555/workouts/2/exercises/2/workout_exercises`
+  - Body: 
+  {
+    "reps": 10,
+    "sets": 4,
+    "duration_seconds": 300
+  }
