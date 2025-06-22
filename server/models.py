@@ -2,6 +2,8 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm import validates
+from marshmallow import Schema, fields
+
 #db = SQLAlchemy()
 
 metadata = MetaData(naming_convention={
@@ -31,6 +33,8 @@ class Exercise(db.Model):
     
     def __repr__(self):
         return f"<Exercise {self.id}, {self.name}, {self.category}>"
+    
+
 
 
 class Workout(db.Model):
@@ -46,6 +50,7 @@ class Workout(db.Model):
 
     def __repr__(self):
         return f"<Workout {self.id}, {self.date}, {self.duration_minutes}>"
+    
 
 
 class WorkoutExercises(db.Model):
@@ -70,3 +75,27 @@ class WorkoutExercises(db.Model):
     
     def __repr__(self):
         return f'<WorkoutExercises {self.id}, Sets {self.sets}, Reps {self.reps}, Duration {self.duration_seconds}>'
+    
+class ExerciseSchema(Schema):
+    id = fields.Int(dump_only=True)
+    name = fields.String(required=True)
+    category = fields.String()
+    equipment_needed = fields.Boolean()
+    workout_exercises = fields.List(fields.Nested(lambda: WorkoutExercisesSchema(exclude=("exercise",))))
+
+
+class WorkoutSchema(Schema):
+    id = fields.Int(dump_only=True)
+    date = fields.Date()
+    duration_minutes = fields.Int()
+    notes = fields.String()
+    workout_exercises = fields.List(fields.Nested(lambda: WorkoutExercisesSchema(exclude=("workout",))))
+    
+
+class WorkoutExercisesSchema(Schema):
+    id = fields.Int(dump_only=True)
+    reps = fields.Int()
+    sets = fields.Int()
+    duration_seconds = fields.Int()
+    workout = fields.Nested(lambda: WorkoutSchema(exclude=("workout_exercises",)))
+    exercise = fields.Nested(lambda: ExerciseSchema(exclude=("workout_exercises",)))
