@@ -22,8 +22,9 @@ class Exercise(db.Model):
     category = db.Column(db.String)
     equipment_needed = db.Column(db.Boolean, default=False)
 
-    workout_exercises = db.relationship('WorkoutExercises', back_populates='exercise')
+    workout_exercises = db.relationship('WorkoutExercises', back_populates='exercise', cascade='all, delete-orphan')
     workouts = association_proxy('workout_exercises', 'workout')
+
 
     @validates('name')
     def validate_name(self, key, input_name):
@@ -45,7 +46,7 @@ class Workout(db.Model):
     duration_minutes = db.Column(db.Integer)
     notes = db.Column(db.Text)
     
-    workout_exercises = db.relationship('WorkoutExercises', back_populates='workout')
+    workout_exercises = db.relationship('WorkoutExercises', back_populates='workout', cascade='all, delete-orphan')
     exercises = association_proxy('workout_exercises', 'exercise')
 
     @validates("duration_minutes")
