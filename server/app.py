@@ -14,9 +14,49 @@ db.init_app(app)
 
 # Define Routes here
 @app.route('/')
-def get_home():
+def index():
     return "Welcome to WorkOut!"
 
+@app.route('/workouts', methods=['GET'])
+def get_workouts():
+    pass
+
+@app.route('/workouts/<id>', methods=['GET'])
+def get_workout_by_id():
+    pass
+
+@app.route('/workouts', methods=['POST'])
+def add_workout():
+    pass
+
+
+
+@app.route('/workouts/<id>', methods=['DELETE'])
+def delete_workout():
+    pass
+
+
+@app.route('/exercises', methods=['GET'])
+def get_exercises():
+    pass
+    
+
+@app.route('/exercises/<id>', methods=['GET'])
+def get_exercise_by_id():
+    pass
+
+
+@app.route('/exercises', methods=['POST'])
+def add_exercise():
+    pass
+
+@app.route('/exercises/<id>', methods=['DELETE'])
+def delete_exercise(id):
+    pass
+
+@app.route('/workouts/<workout_id>/exercises/<exercise_id>/workout_exercises', methods=['POST'])
+def add_workout_to_exercise():
+    pass
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
