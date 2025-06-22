@@ -1,4 +1,4 @@
-from flask import Flask, make_response
+from flask import Flask, make_response, jsonify
 from flask_migrate import Migrate
 
 from models import *
@@ -17,9 +17,27 @@ db.init_app(app)
 def index():
     return "Welcome to WorkOut!"
 
+
+
+
+
+"""without applying Schema"""
 @app.route('/workouts', methods=['GET'])
 def get_workouts():
-    pass
+    workouts = Workout.query.all()
+    workouts_list = []
+    for w in workouts:
+        w_dict = {
+            "id":w.id,
+            "date": w.date,
+            "duration_minutes": w.duration_minutes,
+            "notes": w.notes
+        }
+        workouts_list.append(w_dict)
+    
+    return jsonify(workouts_list), 200
+    
+
 
 @app.route('/workouts/<id>', methods=['GET'])
 def get_workout_by_id():
