@@ -1,4 +1,4 @@
-from flask import Flask, make_response
+from flask import Flask, make_response, jsonify, request
 from flask_migrate import Migrate
 
 from models import *
@@ -14,9 +14,84 @@ db.init_app(app)
 
 # Define Routes here
 @app.route('/')
-def get_home():
+def index():
     return "Welcome to WorkOut!"
 
 
+@app.route('/workouts', methods=['GET'])
+def get_workouts():
+    workouts = Workout.query.all()
+    result = WorkoutSchema(many=True).dump(workouts)
+    return jsonify(result), 200
+    
+
+@app.route('/workouts/<int:id>', methods=['GET'])
+def get_workout_by_id(id):
+    workout = Workout.query.filter_by(id=id).first()
+    if not workout:
+        return jsonify({"error": "Workout not found"}), 404
+    result = WorkoutSchema().dump(workout)
+    return jsonify(result), 200
+
+
+# @app.route('/workouts', methods=['POST'])
+# def add_workout():
+#     pass
+
+
+# @app.route('/workouts/<int:id>', methods=['DELETE'])
+# def delete_workout():
+#     pass
+
+
+@app.route('/exercises', methods=['GET'])
+def get_exercises():
+    exercises = Exercise.query.all()
+    result = ExerciseSchema(many=True).dump(exercises)
+    return jsonify(result), 200
+    
+
+@app.route('/exercises/<int:id>', methods=['GET'])
+def get_exercise_by_id(id):
+    exercise = Exercise.query.filter_by(id=id).first()
+    if not exercise:
+        return jsonify({"error": "Exercise not found"}), 404
+    result = ExerciseSchema().dump(exercise)
+    return jsonify(result), 200
+
+
+
+# @app.route('/exercises', methods=['POST'])
+# def add_exercise():
+#     pass
+
+# @app.route('/exercises/<int:id>', methods=['DELETE'])
+# def delete_exercise(id):
+#     pass
+
+# @app.route('/workouts/<int:workout_id>/exercises/<int:exercise_id>/workout_exercises', methods=['POST'])
+# def add_workout_to_exercise():
+#     pass
+
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
+
+
+
+
+#"""without applying Schema"""
+# @app.route('/workouts', methods=['GET'])
+# # @app.route('/workouts')
+# def get_workouts():
+#     workouts = Workout.query.all()
+#     workouts_list = []
+#     for w in workouts:
+#         w_dict = {
+#             "id": w.id,
+#             "date": w.date,
+#             "duration_minutes": w.duration_minutes,
+#             "notes": w.notes
+#         }
+#         workouts_list.append(w_dict)
+    
+#     return jsonify(workouts_list), 200
