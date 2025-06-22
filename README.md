@@ -1,5 +1,4 @@
-# Workout_Application_Backend
-
+# Flask_SQLAlchemy_Workout_Application_Backend
 
 This project is a robust backend API for a Workout Tracking Application, built to help personal trainers create, manage, and track workout routines and their associated exercises. Developed with Flask, SQLAlchemy, and Marshmallow, the application demonstrates key backend development practices such as defining model relationships, seeding data, validating requests, and maintaining clean, modular code architecture.
 
@@ -28,8 +27,8 @@ This project is a robust backend API for a Workout Tracking Application, built t
     # Seed the Database
     python seed.py
     
-    # Run the Flask server
-    flask run
+    # Run the Flask shell(Optional)
+    flask shell
 
 
 ## 📌 API Endpoints
@@ -51,3 +50,36 @@ This project is a robust backend API for a Workout Tracking Application, built t
 | POST   | `/exercises`          | Create a new exercise               |
 | GET    | `/exercises/<id>`     | Get details of a specific exercise  |
 | DELETE | `/exercises/<id>`     | Delete an exercise                  |
+
+
+### Test the API
+
+    # Start the Flask development server:
+    flask run
+
+
+Test your endpoints using Postman or curl:
+
+- `GET http://localhost:5555/workouts`
+
+- `POST http://localhost:5555/workouts`
+  - Body: 
+  {
+    "date": "2025-06-25",
+    "duration_minutes": 60,
+    "notes": "Full body workout"
+  }
+
+- `DELETE http://localhost:5555/workouts/3`
+
+- `GET http://localhost:5555/exercises`
+
+- `POST http://localhost:5555/exercises`
+  - Body: 
+    {
+        "name": "Burpee",
+        "category": "Cardio",
+        "equipment_needed": false
+    }
+
+- `DELETE http://localhost:5555/exercises/4`
