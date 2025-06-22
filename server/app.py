@@ -2,6 +2,7 @@ from flask import Flask, make_response
 from flask_migrate import Migrate
 
 from models import *
+#from models import db, Exercise, Workout, WorkoutExercises
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
@@ -12,6 +13,10 @@ migrate = Migrate(app, db)
 db.init_app(app)
 
 # Define Routes here
+@app.route('/')
+def get_home():
+    return "Welcome to WorkOut!"
+
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
